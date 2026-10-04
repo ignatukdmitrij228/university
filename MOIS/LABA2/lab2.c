@@ -1,9 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
 
-// ПРЕДСТАВЛЕНИЕ ГРАФА: СПИСКИ СМЕЖНОСТИ
+// РџР Р•Р”РЎРўРђР’Р›Р•РќРР• Р“Р РђР¤Рђ: РЎРџРРЎРљР РЎРњР•Р–РќРћРЎРўР
 typedef struct Edge {
     int v;
     struct Edge* next;
@@ -15,7 +15,7 @@ typedef struct {
     Edge** adj;
 } Graph;
 
-// Добавление неориентированного ребра
+// Р”РѕР±Р°РІР»РµРЅРёРµ РЅРµРѕСЂРёРµРЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ СЂРµР±СЂР°
 static void add_edge(Graph* g, int u, int v)
 {
     Edge* p = (Edge*)malloc(sizeof(Edge));
@@ -27,8 +27,8 @@ static void add_edge(Graph* g, int u, int v)
     g->m++;
 }
 
-// Чтение графа из файла
-// Формат: первая строка — n; далее строки u v 
+// Р§С‚РµРЅРёРµ РіСЂР°С„Р° РёР· С„Р°Р№Р»Р°
+// Р¤РѕСЂРјР°С‚: РїРµСЂРІР°СЏ СЃС‚СЂРѕРєР° вЂ” n; РґР°Р»РµРµ СЃС‚СЂРѕРєРё u v 
 static int read_graph(const char* fname, Graph* g)
 {
     FILE* f = fopen(fname, "r");
@@ -70,7 +70,7 @@ static int read_graph(const char* fname, Graph* g)
     return 1;
 }
 
-// Освобождение 
+// РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ 
 static void free_graph(Graph* g)
 {
     for (int i = 1; i <= g->n; i++) {
@@ -82,8 +82,8 @@ static void free_graph(Graph* g)
     g->n = g->m = 0;
 }
 
-// ВСПОМОГАТЕЛЬНЫЕ 
-// Степень вершины 
+// Р’РЎРџРћРњРћР“РђРўР•Р›Р¬РќР«Р• 
+// РЎС‚РµРїРµРЅСЊ РІРµСЂС€РёРЅС‹ 
 static int degree(const Graph* g, int u)
 {
     int d = 0;
@@ -91,7 +91,7 @@ static int degree(const Graph* g, int u)
     return d;
 }
 
-// Смежны ли u и v 
+// РЎРјРµР¶РЅС‹ Р»Рё u Рё v 
 static int is_adj(const Graph* g, int u, int v)
 {
     for (const Edge* e = g->adj[u]; e; e = e->next)
@@ -99,8 +99,8 @@ static int is_adj(const Graph* g, int u, int v)
     return 0;
 }
 
-// ПРОВЕРКА СВЯЗНОСТИ — нужна для критерия Эйлера
-// Изолированные вершины игнорируются.
+// РџР РћР’Р•Р РљРђ РЎР’РЇР—РќРћРЎРўР вЂ” РЅСѓР¶РЅР° РґР»СЏ РєСЂРёС‚РµСЂРёСЏ Р­Р№Р»РµСЂР°
+// РР·РѕР»РёСЂРѕРІР°РЅРЅС‹Рµ РІРµСЂС€РёРЅС‹ РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ.
 static int is_connected(const Graph* g, int* visited, int* stack)
 {
     if (g->n == 0) return 1;
@@ -123,8 +123,8 @@ static int is_connected(const Graph* g, int* visited, int* stack)
     return 1;
 }
 
-// ЭЙЛЕРОВ ЦИКЛ
-// Критерий: связный + все степени чётные
+// Р­Р™Р›Р•Р РћР’ Р¦РРљР›
+// РљСЂРёС‚РµСЂРёР№: СЃРІСЏР·РЅС‹Р№ + РІСЃРµ СЃС‚РµРїРµРЅРё С‡С‘С‚РЅС‹Рµ
 static int has_euler_circuit(const Graph* g, int* visited, int* stack)
 {
     if (g->n == 0 || g->m == 0) return 0;
@@ -134,15 +134,15 @@ static int has_euler_circuit(const Graph* g, int* visited, int* stack)
     return 1;
 }
 
-// Нахождение эйлерова цикла — алгоритм Хирхольцера (итеративный).
-// Возвращает длину цикла (число вершин в path), либо 0. 
+// РќР°С…РѕР¶РґРµРЅРёРµ СЌР№Р»РµСЂРѕРІР° С†РёРєР»Р° вЂ” Р°Р»РіРѕСЂРёС‚Рј РҐРёСЂС…РѕР»СЊС†РµСЂР° (РёС‚РµСЂР°С‚РёРІРЅС‹Р№).
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ С†РёРєР»Р° (С‡РёСЃР»Рѕ РІРµСЂС€РёРЅ РІ path), Р»РёР±Рѕ 0. 
 static int euler_circuit(const Graph* g, int* path)
 {
     if (g->m == 0) return 0;
 
     int N = g->n, M = g->m;
 
-    // Соберём рёбра один раз
+    // РЎРѕР±РµСЂС‘Рј СЂС‘Р±СЂР° РѕРґРёРЅ СЂР°Р·
     int* eu = (int*)malloc((M + 1) * sizeof(int));
     int* ev = (int*)malloc((M + 1) * sizeof(int));
     int idx = 0;
@@ -175,7 +175,7 @@ static int euler_circuit(const Graph* g, int* path)
         }
     }
 
-    // Разворачиваем 
+    // Р Р°Р·РІРѕСЂР°С‡РёРІР°РµРј 
     for (int i = 0; i < clen / 2; i++) {
         int t = cycle[i]; cycle[i] = cycle[clen - 1 - i]; cycle[clen - 1 - i] = t;
     }
@@ -185,15 +185,15 @@ static int euler_circuit(const Graph* g, int* path)
     return clen;
 }
 
-/*   ГАМИЛЬТОНОВ ЦИКЛ — итеративный перебор с возвратом
-    Без рекурсии: свой стек откатов.
-    Идея:
-     - path[0..pos-1] — текущий путь;
-     - used[] — какие вершины в пути;
-     - iter[u] — указатель на "текущего соседа" в списке adj[u].
-     Когда возвращаемся к u и берём следующего соседа — iter[u]++.
-     Стек "возвратов": в нём вершины, из которых мы ушли вглубь.
-     Когда путь дошёл до длины n и последняя смежна с первой — успех. */
+/*   Р“РђРњРР›Р¬РўРћРќРћР’ Р¦РРљР› вЂ” РёС‚РµСЂР°С‚РёРІРЅС‹Р№ РїРµСЂРµР±РѕСЂ СЃ РІРѕР·РІСЂР°С‚РѕРј
+    Р‘РµР· СЂРµРєСѓСЂСЃРёРё: СЃРІРѕР№ СЃС‚РµРє РѕС‚РєР°С‚РѕРІ.
+    РРґРµСЏ:
+     - path[0..pos-1] вЂ” С‚РµРєСѓС‰РёР№ РїСѓС‚СЊ;
+     - used[] вЂ” РєР°РєРёРµ РІРµСЂС€РёРЅС‹ РІ РїСѓС‚Рё;
+     - iter[u] вЂ” СѓРєР°Р·Р°С‚РµР»СЊ РЅР° "С‚РµРєСѓС‰РµРіРѕ СЃРѕСЃРµРґР°" РІ СЃРїРёСЃРєРµ adj[u].
+     РљРѕРіРґР° РІРѕР·РІСЂР°С‰Р°РµРјСЃСЏ Рє u Рё Р±РµСЂС‘Рј СЃР»РµРґСѓСЋС‰РµРіРѕ СЃРѕСЃРµРґР° вЂ” iter[u]++.
+     РЎС‚РµРє "РІРѕР·РІСЂР°С‚РѕРІ": РІ РЅС‘Рј РІРµСЂС€РёРЅС‹, РёР· РєРѕС‚РѕСЂС‹С… РјС‹ СѓС€Р»Рё РІРіР»СѓР±СЊ.
+     РљРѕРіРґР° РїСѓС‚СЊ РґРѕС€С‘Р» РґРѕ РґР»РёРЅС‹ n Рё РїРѕСЃР»РµРґРЅСЏСЏ СЃРјРµР¶РЅР° СЃ РїРµСЂРІРѕР№ вЂ” СѓСЃРїРµС…. */
 static int hamiltonian_circuit(const Graph* g, int* path)
 {
     if (g->n < 3) return 0;
@@ -201,11 +201,11 @@ static int hamiltonian_circuit(const Graph* g, int* path)
     int N = g->n;
     int* used = (int*)calloc(N + 1, sizeof(int));
 
-    /* iter[u] — указатель на текущий узел списка adj[u].
-       Храним как указатель на Edge* — так не надо пересчитывать. */
+    /* iter[u] вЂ” СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С‚РµРєСѓС‰РёР№ СѓР·РµР» СЃРїРёСЃРєР° adj[u].
+       РҐСЂР°РЅРёРј РєР°Рє СѓРєР°Р·Р°С‚РµР»СЊ РЅР° Edge* вЂ” С‚Р°Рє РЅРµ РЅР°РґРѕ РїРµСЂРµСЃС‡РёС‚С‹РІР°С‚СЊ. */
     Edge** iter = (Edge**)calloc(N + 1, sizeof(Edge*));
 
-    // Стек отката — вершины текущего пути. pos = длина пути. 
+    // РЎС‚РµРє РѕС‚РєР°С‚Р° вЂ” РІРµСЂС€РёРЅС‹ С‚РµРєСѓС‰РµРіРѕ РїСѓС‚Рё. pos = РґР»РёРЅР° РїСѓС‚Рё. 
     path[0] = 1;
     used[1] = 1;
     int pos = 1;
@@ -214,10 +214,10 @@ static int hamiltonian_circuit(const Graph* g, int* path)
     int found = 0;
 
     while (pos > 0) {
-        // Если прошли все вершины — проверим замыкание 
+        // Р•СЃР»Рё РїСЂРѕС€Р»Рё РІСЃРµ РІРµСЂС€РёРЅС‹ вЂ” РїСЂРѕРІРµСЂРёРј Р·Р°РјС‹РєР°РЅРёРµ 
         if (pos == N) {
             if (is_adj(g, path[pos - 1], path[0])) { found = 1; break; }
-            // Нет замыкания — откат 
+            // РќРµС‚ Р·Р°РјС‹РєР°РЅРёСЏ вЂ” РѕС‚РєР°С‚ 
             pos--;
             used[path[pos]] = 0;
             continue;
@@ -226,21 +226,21 @@ static int hamiltonian_circuit(const Graph* g, int* path)
         int u = path[pos - 1];
         Edge* e = iter[u];
 
-        // Ищем следующего непосещённого соседа 
+        // РС‰РµРј СЃР»РµРґСѓСЋС‰РµРіРѕ РЅРµРїРѕСЃРµС‰С‘РЅРЅРѕРіРѕ СЃРѕСЃРµРґР° 
         while (e && used[e->v]) e = e->next;
         iter[u] = e;
 
         if (e == NULL) {
-            // У вершины u больше нет вариантов — откат 
+            // РЈ РІРµСЂС€РёРЅС‹ u Р±РѕР»СЊС€Рµ РЅРµС‚ РІР°СЂРёР°РЅС‚РѕРІ вЂ” РѕС‚РєР°С‚ 
             used[u] = 0;
             iter[u] = NULL;
             pos--;
             continue;
         }
 
-        // Берём соседа e->v, идём вглубь 
+        // Р‘РµСЂС‘Рј СЃРѕСЃРµРґР° e->v, РёРґС‘Рј РІРіР»СѓР±СЊ 
         int v = e->v;
-        iter[u] = e->next;   // следующий раз начнём со следующего узла 
+        iter[u] = e->next;   // СЃР»РµРґСѓСЋС‰РёР№ СЂР°Р· РЅР°С‡РЅС‘Рј СЃРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ СѓР·Р»Р° 
         path[pos] = v;
         used[v] = 1;
         iter[v] = g->adj[v];
@@ -271,7 +271,7 @@ int main(int argc, char** argv)
     printf("Fayl: %s\n", argv[1]);
     printf("Vershin: %d, ryober: %d\n\n", g.n, g.m);
 
-    // ЭЙЛЕР 
+    // Р­Р™Р›Р•Р  
     printf("=== EYLEROV CIKL ===\n");
     if (has_euler_circuit(&g, visited, buf)) {
         printf("Kriteriy vypolnen: graf svyaznyy, vse stepeni chetnye.\n");
@@ -297,7 +297,7 @@ int main(int argc, char** argv)
     }
     printf("\n");
 
-    // ГАМИЛЬТОН
+    // Р“РђРњРР›Р¬РўРћРќ
     printf("=== GAMILTONOV CIKL ===\n");
     int* hpath = (int*)malloc((g.n + 1) * sizeof(int));
     if (hamiltonian_circuit(&g, hpath)) {
