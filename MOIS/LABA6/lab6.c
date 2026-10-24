@@ -1,28 +1,28 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
 
-// ПРЕДСТАВЛЕНИЕ ДЕРЕВА
+// РџР Р•Р”РЎРўРђР’Р›Р•РќРР• Р”Р•Р Р•Р’Рђ
 typedef struct {
     int left;
     int right;
 } Node;
 
 typedef struct {
-    int n;              // число вершин 
-    int root;           // корень 
-    Node* nodes;        // массив вершин (индексы 1..n) 
+    int n;              // С‡РёСЃР»Рѕ РІРµСЂС€РёРЅ 
+    int root;           // РєРѕСЂРµРЅСЊ 
+    Node* nodes;        // РјР°СЃСЃРёРІ РІРµСЂС€РёРЅ (РёРЅРґРµРєСЃС‹ 1..n) 
 } Tree;
 
-// Инициализация дерева 
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґРµСЂРµРІР° 
 static void init_tree(Tree* t, int n) {
     t->n = n;
     t->root = 0;
     t->nodes = (Node*)calloc(n + 1, sizeof(Node));
 }
 
-// Освобождение 
+// РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ 
 static void free_tree(Tree* t) {
     if (t->nodes) {
         free(t->nodes);
@@ -32,7 +32,7 @@ static void free_tree(Tree* t) {
     t->root = 0;
 }
 
-// Чтение дерева из файла 
+// Р§С‚РµРЅРёРµ РґРµСЂРµРІР° РёР· С„Р°Р№Р»Р° 
 static int read_tree(const char* fname, Tree* t) {
     FILE* f = fopen(fname, "r");
     if (!f) { printf("Oshibka\n"); return 0; }
@@ -58,17 +58,17 @@ static int read_tree(const char* fname, Tree* t) {
         int got = sscanf(line, "%d %d", &u, &v);
         if (got < 2) continue;
 
-        // Проверки на корректность
+        // РџСЂРѕРІРµСЂРєРё РЅР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ
         if (u < 1 || u > n || v < 1 || v > n || u == v) {
             printf("Oshibka\n");
             fclose(f);
-            free_tree(t); // Освобождаем память при ошибке!
+            free_tree(t); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ РїСЂРё РѕС€РёР±РєРµ!
             return 0;
         }
 
         if (first_mentioned == 0) { first_mentioned = u; }
 
-        // Вставка ребёнка
+        // Р’СЃС‚Р°РІРєР° СЂРµР±С‘РЅРєР°
         if (t->nodes[u].left == 0) {
             t->nodes[u].left = v;
         }
@@ -78,7 +78,7 @@ static int read_tree(const char* fname, Tree* t) {
         else {
             printf("Oshibka (bolshe 2 detey)\n");
             fclose(f);
-            free_tree(t); // Освобождаем память при ошибке!
+            free_tree(t); // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ РїСЂРё РѕС€РёР±РєРµ!
             return 0;
         }
     }
@@ -88,7 +88,7 @@ static int read_tree(const char* fname, Tree* t) {
     return 1;
 }
 
-// ИТЕРАТИВНЫЕ ОБХОДЫ
+// РРўР•Р РђРўРР’РќР«Р• РћР‘РҐРћР”Р«
 static void preorder(const Tree* t, int* res, int* len) {
     int* stack = (int*)malloc((t->n + 1) * sizeof(int));
     int top = 0;
@@ -144,7 +144,7 @@ static void postorder(const Tree* t, int* res, int* len) {
     free(stack1); free(stack2);
 }
 
-// ПРОВЕРКА ИЗОМОРФИЗМА
+// РџР РћР’Р•Р РљРђ РР—РћРњРћР Р¤РР—РњРђ
 static int are_isomorphic(const Tree* t1, const Tree* t2) {
     if (t1->n != t2->n) return 0;
 
@@ -179,7 +179,7 @@ static int are_isomorphic(const Tree* t1, const Tree* t2) {
     return iso;
 }
 
-// ВЫСОТА И СБАЛАНСИРОВАННОСТЬ
+// Р’Р«РЎРћРўРђ Р РЎР‘РђР›РђРќРЎРР РћР’РђРќРќРћРЎРўР¬
 static int tree_height(const Tree* t, int u) {
     if (u == 0) return 0;
 
@@ -227,7 +227,7 @@ int main(int argc, char** argv) {
     Tree t1, t2;
     if (!read_tree(argv[1], &t1)) return 1;
 
-    // Если второе дерево не прочиталось, освобождаем первое
+    // Р•СЃР»Рё РІС‚РѕСЂРѕРµ РґРµСЂРµРІРѕ РЅРµ РїСЂРѕС‡РёС‚Р°Р»РѕСЃСЊ, РѕСЃРІРѕР±РѕР¶РґР°РµРј РїРµСЂРІРѕРµ
     if (!read_tree(argv[2], &t2)) { free_tree(&t1); return 1; }
 
     printf("=== Derevo 1 (%s) ===\n", argv[1]);
